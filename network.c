@@ -77,23 +77,6 @@ void tellServerPlayerMoved(int playerid, int movement_type, int newval)
 	}
 }
 
-void serverSendKillPacket(int killer, int victim)
-{
-	NetPacket pkt;
-
-	assert(is_server);
-	pkt.cmd = NETCMD_KILL;
-	pkt.arg = killer;
-	pkt.arg2 = victim;
-	pkt.arg3 = player[victim].x;
-	pkt.arg4 = player[victim].y;
-	processKillPacket(&pkt);
-#ifdef USE_NET
-	if (is_net)
-		sendPacketToAll(&pkt);
-#endif
-}
-
 void processKillPacket(NetPacket *pkt)
 {
 	int c1 = pkt->arg;
@@ -137,6 +120,23 @@ void processKillPacket(NetPacket *pkt)
 		add_leftovers(0, 376, 34 + c1 * 64, s1 - (s1 / 10) * 10, &number_gobs);
 		add_leftovers(1, 376, 34 + c1 * 64, s1 - (s1 / 10) * 10, &number_gobs);
 	}
+}
+
+void serverSendKillPacket(int killer, int victim)
+{
+	NetPacket pkt;
+
+	assert(is_server);
+	pkt.cmd = NETCMD_KILL;
+	pkt.arg = killer;
+	pkt.arg2 = victim;
+	pkt.arg3 = player[victim].x;
+	pkt.arg4 = player[victim].y;
+	processKillPacket(&pkt);
+#ifdef USE_NET
+	if (is_net)
+		sendPacketToAll(&pkt);
+#endif
 }
 
 #ifdef USE_NET

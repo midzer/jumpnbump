@@ -41,6 +41,8 @@
 
 #include "network.h"
 
+#include <emscripten.h>
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
@@ -902,6 +904,7 @@ static int menu_loop(void)
 
 int main(int argc, char *argv[])
 {
+	emscripten_set_main_loop(game_loop, 0, 0);
 	int result;
 
 	if (init_program(argc, argv, pal) != 0)

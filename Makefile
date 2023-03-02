@@ -3,12 +3,12 @@ PREFIX ?= /usr/local
 BINDIR ?= $(PREFIX)/bin
 DATADIR ?= $(PREFIX)/share
 # Can be overridden to use e.g. /usr/share/games
-GAMEDATADIR ?= $(DATADIR)
+GAMEDATADIR ?= assets
 EXE ?=
 
-CFLAGS ?= -Wall -O2 -ffast-math -funroll-loops -fno-common
+CFLAGS ?= -Wall -Oz -ffast-math -funroll-loops -fno-common -std=c89 -Wno-error=implicit-function-declaration
 SDL_CFLAGS = `sdl2-config --cflags`
-DEFINES = -Dstricmp=strcasecmp -Dstrnicmp=strncasecmp -DNDEBUG -DUSE_SDL -DUSE_NET -DZLIB_SUPPORT -DBZLIB_SUPPORT
+DEFINES = -Dstricmp=strcasecmp -Dstrnicmp=strncasecmp -DNDEBUG -DUSE_SDL
 INCLUDES = -I.
 CFLAGS += $(DEFINES) $(SDL_CFLAGS) $(INCLUDES)
 export SDL_CFLAGS
@@ -17,7 +17,7 @@ export INCLUDES
 
 LDFLAGS ?=
 SDL_LIBS = `sdl2-config --libs`
-LIBS = $(SDL_LIBS) -lSDL2_mixer -lSDL2_net -lbz2 -lz -lm
+LIBS = $(SDL_LIBS) -lSDL2_mixer -lm
 
 TARGET = jumpnbump$(EXE)
 SDL_TARGET = sdl.a
@@ -25,7 +25,7 @@ MODIFY_TARGET = gobpack$(EXE) jnbpack$(EXE) jnbunpack$(EXE)
 OBJS = main.o menu.o filter.o network.o
 BINARIES = $(TARGET) $(MODIFY_TARGET)
 
-.PHONY: data modify
+.PHONY: 
 
 all: $(BINARIES)
 
@@ -44,9 +44,6 @@ $(OBJS): globals.h
 
 globals.h: globals.pre
 	sed -e "s#%%DATADIR%%#$(GAMEDATADIR)#g" < globals.pre > globals.h
-
-data: $(MODIFY_TARGET)
-	$(MAKE) -C data
 
 jnbmenu:
 	$(MAKE) -C menu

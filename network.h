@@ -114,8 +114,6 @@ int update_players_from_server(void);
 
 void serverSendAlive(int playerid);
 
-void serverSendKillPacket(int killer, int victim);
-
 void update_players_from_clients(void);
 
 void init_server(const char *netarg);
@@ -123,5 +121,7 @@ void init_server(const char *netarg);
 void connect_to_server(char *netarg);
 
 #endif /* USE_NET */
+
+void serverSendKillPacket(int killer, int victim);
 
 #endif /* __NETWORK_H__ */
