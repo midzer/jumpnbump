@@ -6,7 +6,8 @@ DATADIR ?= $(PREFIX)/share
 GAMEDATADIR ?= assets
 EXE ?=
 
-CFLAGS ?= -Wall -Oz -ffast-math -funroll-loops -fno-common -std=c89 -Wno-error=implicit-function-declaration
+CFLAGS ?= -Wall -ffast-math -funroll-loops -fno-common -std=c89 -Wno-error=implicit-function-declaration
+CFLAGS += -sSUPPORT_ERRNO=0 -O3 -g0 -flto
 SDL_CFLAGS = `sdl2-config --cflags`
 DEFINES = -Dstricmp=strcasecmp -Dstrnicmp=strncasecmp -DNDEBUG -DUSE_SDL
 INCLUDES = -I.
@@ -15,15 +16,15 @@ export SDL_CFLAGS
 export DEFINES
 export INCLUDES
 
-LDFLAGS ?=
+LDFLAGS ?= -ASYNCIFY -sWASM=1 -sENVIRONMENT=web --closure=1 --preload-file assets -flto
 SDL_LIBS = `sdl2-config --libs`
 LIBS = $(SDL_LIBS) -lSDL2_mixer -lm
 
-TARGET = jumpnbump$(EXE)
+TARGET = index.html$(EXE)
 SDL_TARGET = sdl.a
 MODIFY_TARGET = gobpack$(EXE) jnbpack$(EXE) jnbunpack$(EXE)
 OBJS = main.o menu.o filter.o network.o
-BINARIES = $(TARGET) $(MODIFY_TARGET)
+BINARIES = $(TARGET) #$(MODIFY_TARGET)
 
 .PHONY: 
 
