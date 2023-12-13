@@ -7,7 +7,7 @@ GAMEDATADIR ?= assets
 EXE ?=
 
 CFLAGS ?= -Wall -ffast-math -funroll-loops -fno-common -std=c89 -Wno-error=implicit-function-declaration
-CFLAGS += -sSUPPORT_ERRNO=0 -O3 -g0 -flto
+CFLAGS += -O3 -flto -fno-rtti -fno-exceptions
 SDL_CFLAGS = `sdl2-config --cflags`
 DEFINES = -Dstricmp=strcasecmp -Dstrnicmp=strncasecmp -DNDEBUG -DUSE_SDL
 INCLUDES = -I.
@@ -16,9 +16,9 @@ export SDL_CFLAGS
 export DEFINES
 export INCLUDES
 
-LDFLAGS ?= -ASYNCIFY -sWASM=1 -sENVIRONMENT=web --closure=1 --preload-file assets -flto
+LDFLAGS ?= -O3 -flto -fno-rtti -fno-exceptions -sASYNCIFY -sASYNCIFY_ONLY=["main","game_loop","Mix_FreeMusic","dj_ready_mod","flippage","intr_sysupdate","SDL_Delay","GLES2_RenderPresent","Emscripten_GLES_SwapWindow","dynCall_v"] -sASYNCIFY_IGNORE_INDIRECT -sENVIRONMENT=web --preload-file assets --closure 1
 SDL_LIBS = `sdl2-config --libs`
-LIBS = $(SDL_LIBS) -lSDL2_mixer -lm
+LIBS = $(SDL_LIBS) -sUSE_SDL_MIXER=2 -sSDL2_MIXER_FORMATS='["mod"]'
 
 TARGET = index.html$(EXE)
 SDL_TARGET = sdl.a
