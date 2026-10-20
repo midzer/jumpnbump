@@ -33,11 +33,13 @@
 #endif
 #include "globals.h"
 
-char keyb[256];
+char keyb[SDL_NUM_SCANCODES];
 char last_keys[50];
 
 int addkey(unsigned int key)
 {
+	if ((key & 0x7fff) >= SDL_NUM_SCANCODES)
+		return -1;
 	if (!(key & 0x8000))
 		keyb[key & 0x7fff] = 1;
 	else
@@ -67,7 +69,7 @@ int hook_keyb_handler(void)
 
 int key_pressed(int key)
 {
-	return keyb[(unsigned char) key];
+	return key >= 0 && key < SDL_NUM_SCANCODES ? keyb[key] : 0;
 }
 
 int intr_sysupdate()
